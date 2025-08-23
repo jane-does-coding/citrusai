@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+	font-family: "Steiner";
+	src: url("/steiner-font/steiner.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+.steiner {
+	font-family: "Steiner", sans-serif;
+}
