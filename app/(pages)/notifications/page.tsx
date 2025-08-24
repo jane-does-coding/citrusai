@@ -9,7 +9,7 @@ const Notifications = async () => {
 	let notifications = await getNotifications();
 
 	if (!notifications) notifications = [];
-	console.log(notifications);
+
 	if (!currentUser)
 		return (
 			<div className="flex justify-center items-center h-screen">
