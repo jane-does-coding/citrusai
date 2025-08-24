@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
 	LuChartLine,
 	LuCircleFadingPlus,
@@ -15,6 +15,7 @@ import {
 
 const Sidebar = () => {
 	const [pinned, setPinned] = useState(false);
+	const [notificationsCount, setNotificationsCount] = useState<number>(0);
 	const pathname = usePathname();
 
 	const isActive = (path: string) => pathname === path;
@@ -23,13 +24,27 @@ const Sidebar = () => {
 		"bg-orange-100 border-[1px] border-orange-400 text-orange-600";
 	const inactiveIconClasses = "bg-slate-100 border-[1px] border-slate-300";
 
+	useEffect(() => {
+		const fetchNotifications = async () => {
+			try {
+				const res = await fetch("/api/notifications");
+				if (!res.ok) return;
+				const data = await res.json();
+				setNotificationsCount(data?.length || 0);
+				console.log(notificationsCount);
+			} catch (error) {
+				console.error("Failed to fetch notifications:", error);
+			}
+		};
+		fetchNotifications();
+	}, []);
+
 	return (
 		<div
 			className={`flex flex-col justify-between ${
 				pinned ? "w-[19vw]" : "w-[6vw] hover:w-[19vw]"
 			} border-r-[1px] border-slate-300 transition-all h-screen overflow-hidden bg-white px-[1vw] py-[3vh] sticky`}
 		>
-			{/* Pin Button */}
 			<button
 				onClick={() => setPinned(!pinned)}
 				className="absolute top-[1vh] left-[16.5vw] p-2 rounded-full text-slate-400 transition-colors cursor-pointer"
@@ -42,7 +57,6 @@ const Sidebar = () => {
 			</button>
 
 			<div className="flex flex-col gap-[2vh] items-start justify-start">
-				{/* Logo */}
 				<Link
 					href={"/"}
 					className={`w-[4vw] flex items-center justify-center relative aspect-[1] rounded-[2vh] ${activeIconClasses}`}
@@ -53,7 +67,6 @@ const Sidebar = () => {
 					</div>
 				</Link>
 
-				{/* Dashboard */}
 				<Link
 					href={"/"}
 					className={`w-[4vw] flex items-center justify-center relative aspect-[1] rounded-[2vh] ${
@@ -70,7 +83,6 @@ const Sidebar = () => {
 					</div>
 				</Link>
 
-				{/* Analytics */}
 				<Link
 					href={"/analytics"}
 					className={`w-[4vw] flex items-center justify-center relative aspect-[1] rounded-[2vh] ${
@@ -87,7 +99,6 @@ const Sidebar = () => {
 					</div>
 				</Link>
 
-				{/* Notification */}
 				<Link
 					href={"/notifications"}
 					className={`w-[4vw] flex items-center justify-center relative aspect-[1] rounded-[2vh] ${
@@ -99,12 +110,16 @@ const Sidebar = () => {
 							isActive("/notifications") ? "text-orange-600" : ""
 						}`}
 					/>
+					{notificationsCount > 0 && (
+						<span className="absolute top-[0.5vh] right-[0.5vw] bg-orange-500 w-[2.25vh] h-[2.25vh] flex items-center justify-center text-white text-[1.4vh] px-[0.5vh] rounded-full">
+							{notificationsCount}
+						</span>
+					)}
 					<div className="absolute w-[15vw] text-[2.25vh] right-[-16.5vw] flex items-center justify-start top-[50%] font-medium hover:pl-[0.25vw] py-[1vh] transition-all translate-y-[-50%]">
 						Notification
 					</div>
 				</Link>
 
-				{/* Send Interview */}
 				<Link
 					href={"/send-interview"}
 					className={`w-[4vw] flex items-center justify-center relative aspect-[1] rounded-[2vh] ${
@@ -123,7 +138,6 @@ const Sidebar = () => {
 					</div>
 				</Link>
 
-				{/* Profile */}
 				<Link
 					href={"/profile"}
 					className={`w-[4vw] flex items-center justify-center relative aspect-[1] rounded-[2vh] ${
@@ -141,7 +155,6 @@ const Sidebar = () => {
 				</Link>
 			</div>
 
-			{/* Logout */}
 			<Link
 				href={"/logout"}
 				className={`w-[4vw] flex items-center justify-center relative aspect-[1] rounded-[2vh] ${

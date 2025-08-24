@@ -14,14 +14,14 @@ const Page = async ({ params }: { params: { id: string } }) => {
 
 	return (
 		<div className="flex">
-			<div className="w-full">
-				{!currentUser ? (
-					<div className="">
+			<div className="w-full flex">
+				{currentUser ? (
+					<div className="flex w-full">
 						<div className="min-w-fit">
 							<Sidebar />
 						</div>
-						<div className="w-fulll">
-							<InterviewHrView />
+						<div className="w-full h-screen overflow-y-scroll">
+							<InterviewHrView interview={interview} />
 						</div>
 					</div>
 				) : (

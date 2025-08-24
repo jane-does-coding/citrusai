@@ -63,7 +63,6 @@ const SendInterviewForm = () => {
 			const data = await res.json();
 			console.log("Interview created ✅", data);
 
-			// optional: reset form
 			setFields([]);
 			setReceiverName("");
 			setReceiverEmail("");
@@ -94,7 +93,6 @@ const SendInterviewForm = () => {
 				className="mb-[2vh] relative bg-slate-50 gap-[1vw] border-slate-300/50 border-[1px] py-[1.25vh] px-[1vw] rounded-[1.5vh] flex"
 			>
 				<div className="w-full">
-					{/* Editable label */}
 					<div
 						contentEditable
 						suppressContentEditableWarning
@@ -106,7 +104,6 @@ const SendInterviewForm = () => {
 						Field Label
 					</div>
 
-					{/* Inputs */}
 					{field.type === "text" && (
 						<input
 							type="text"
@@ -173,7 +170,6 @@ const SendInterviewForm = () => {
 					)}
 				</div>
 
-				{/* Delete button */}
 				<button
 					type="button"
 					onClick={() => handleDeleteField(field.id)}

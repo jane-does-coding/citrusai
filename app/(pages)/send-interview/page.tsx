@@ -8,7 +8,9 @@ const SendInterview = () => {
 			<div className="min-w-fit">
 				<Sidebar />
 			</div>
-			<SendInterviewForm />
+			<div className="w-full h-screen overflow-y-scroll">
+				<SendInterviewForm />
+			</div>
 		</div>
 	);
 };
