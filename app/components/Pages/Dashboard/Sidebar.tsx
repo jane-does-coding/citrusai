@@ -14,7 +14,7 @@ import {
 } from "react-icons/lu";
 
 const Sidebar = () => {
-	const [pinned, setPinned] = useState(false);
+	const [pinned, setPinned] = useState(true);
 	const [notificationsCount, setNotificationsCount] = useState<number>(0);
 	const pathname = usePathname();
 

@@ -10,14 +10,10 @@ export async function getSession() {
 
 export default async function getInterviewById(id: string) {
 	const currentUser = await getCurrentUser();
-	if (!currentUser) {
-		return null;
-	}
 
 	try {
 		const interviews = await prisma.interview.findUnique({
 			where: {
-				createdById: currentUser.id,
 				id: id,
 			},
 			include: {

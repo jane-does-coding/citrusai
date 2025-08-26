@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
 	LuBinary,
 	LuLetterText,
@@ -33,9 +34,18 @@ const SendInterviewForm = () => {
 	const [comments, setComments] = useState("");
 
 	const handleAddField = (type: FieldType) => {
+		const defaultLabels: Record<FieldType, string> = {
+			text: "Text Field Label",
+			number: "Number Field Label",
+			select: "Select Field Label",
+			textarea: "Textarea Field Label",
+			checkbox: "Checkbox Field Label",
+			range: "Range Field Label",
+		};
+
 		setFields([
 			...fields,
-			{ id: Date.now(), type, label: type.toUpperCase(), placeholder: "" },
+			{ id: Date.now(), type, label: defaultLabels[type], placeholder: "" },
 		]);
 	};
 
@@ -61,7 +71,7 @@ const SendInterviewForm = () => {
 			}
 
 			const data = await res.json();
-			console.log("Interview created ✅", data);
+			console.log("Interview created", data);
 
 			setFields([]);
 			setReceiverName("");
@@ -88,8 +98,12 @@ const SendInterviewForm = () => {
 
 	const renderField = (field: Field) => {
 		return (
-			<div
+			<motion.div
 				key={field.id}
+				initial={{ opacity: 0, y: -10 }}
+				animate={{ opacity: 1, y: 0 }}
+				exit={{ opacity: 0, scale: 0.9 }}
+				transition={{ duration: 0.25, ease: "easeOut" }}
 				className="mb-[2vh] relative bg-slate-50 gap-[1vw] border-slate-300/50 border-[1px] py-[1.25vh] px-[1vw] rounded-[1.5vh] flex"
 			>
 				<div className="w-full">
@@ -101,14 +115,14 @@ const SendInterviewForm = () => {
 						}
 						className="block text-[2vh] mb-[0.5vh] cursor-text capitalize focus:outline-none focus:ring-none focus:border-none"
 					>
-						Field Label
+						{field.label}
 					</div>
 
 					{field.type === "text" && (
 						<input
 							type="text"
 							value={field.placeholder}
-							placeholder={"Field Placeholder"}
+							placeholder="Field Placeholder"
 							onChange={(e) =>
 								handlePlaceholderChange(field.id, e.target.value)
 							}
@@ -118,8 +132,8 @@ const SendInterviewForm = () => {
 					{field.type === "number" && (
 						<input
 							type="number"
-							placeholder={"1"}
 							value={field.placeholder}
+							placeholder="1"
 							onChange={(e) =>
 								handlePlaceholderChange(field.id, e.target.value)
 							}
@@ -144,6 +158,7 @@ const SendInterviewForm = () => {
 							onChange={(e) =>
 								handlePlaceholderChange(field.id, e.target.value)
 							}
+							placeholder="Field Placeholder"
 							className="border-slate-300 border-[1px] rounded-[1.5vh] text-[2vh] px-[1vw] py-[1vh] w-full focus:outline-none"
 						/>
 					)}
@@ -170,14 +185,16 @@ const SendInterviewForm = () => {
 					)}
 				</div>
 
-				<button
+				<motion.button
+					whileTap={{ scale: 0.9 }}
+					whileHover={{ scale: 1.1 }}
 					type="button"
 					onClick={() => handleDeleteField(field.id)}
 					className="flex items-center justify-center bg-slate-100 border-[1px] border-slate-300 px-[1vw] rounded-[1vh] text-red-500 hover:text-red-700 text-[2vh]"
 				>
 					<LuTrash2 className="text-[2.5vh]" />
-				</button>
-			</div>
+				</motion.button>
+			</motion.div>
 		);
 	};
 
@@ -217,72 +234,41 @@ const SendInterviewForm = () => {
 					<textarea
 						value={comments}
 						onChange={(e) => setComments(e.target.value)}
-						placeholder="Additional Comments"
+						placeholder="Additional Comments (Optional)"
 						className="border-slate-300 border-[1px] rounded-[1.5vh] text-[2vh] px-[1vw] py-[1vh] w-full focus:outline-none"
 					/>
 				</div>
 
-				{/* Render dynamic fields */}
-				{fields.map((field) => renderField(field))}
+				{/* Animated dynamic fields */}
+				<AnimatePresence>
+					{fields.map((field) => renderField(field))}
+				</AnimatePresence>
 
 				<h2 className="text-[2.5vh] font-light mb-[2vh] mt-[3vh] pt-[3vh] border-t-[1px] border-slate-300 text-start flex items-center justify-center gap-[1vw]">
 					Add Input <LuPlus className="text-[2.5vh] inline" />
 				</h2>
 				<div className="grid grid-cols-3 gap-x-[0.5vw] gap-y-[1vh] pr-[0vw]">
-					<button
-						type="button"
-						onClick={() => handleAddField("text")}
-						className="bg-slate-100 border-slate-300 border-[1px] py-[1vh] px-[1vw] flex items-center justify-center rounded-[1.75vh] cursor-pointer"
-					>
-						<h2 className="text-[2vh] flex items-center justify-center gap-[0.75vw]">
-							Text <LuPenLine className="text-[2.5vh]" />
-						</h2>
-					</button>
-					<button
-						type="button"
-						onClick={() => handleAddField("number")}
-						className="bg-slate-100 border-slate-300 border-[1px] py-[1vh] px-[1vw] flex items-center justify-center rounded-[1.75vh] cursor-pointer"
-					>
-						<h2 className="text-[2vh] flex items-center justify-center gap-[0.75vw]">
-							Number <LuBinary className="text-[2.5vh]" />
-						</h2>
-					</button>
-					<button
-						type="button"
-						onClick={() => handleAddField("select")}
-						className="bg-slate-100 border-slate-300 border-[1px] py-[1vh] px-[1vw] flex items-center justify-center rounded-[1.75vh] cursor-pointer"
-					>
-						<h2 className="text-[2vh] flex items-center justify-center gap-[0.75vw]">
-							Select <LuSquareMousePointer className="text-[2.5vh]" />
-						</h2>
-					</button>
-					<button
-						type="button"
-						onClick={() => handleAddField("textarea")}
-						className="bg-slate-100 border-slate-300 border-[1px] py-[1vh] px-[1vw] flex items-center justify-center rounded-[1.75vh] cursor-pointer"
-					>
-						<h2 className="text-[2vh] flex items-center justify-center gap-[0.75vw]">
-							Textarea <LuLetterText className="text-[2.5vh]" />
-						</h2>
-					</button>
-					<button
-						type="button"
-						onClick={() => handleAddField("checkbox")}
-						className="bg-slate-100 border-slate-300 border-[1px] py-[1vh] px-[1vw] flex items-center justify-center rounded-[1.75vh] cursor-pointer"
-					>
-						<h2 className="text-[2vh] flex items-center justify-center gap-[0.75vw]">
-							Checkbox <LuSquareCheck className="text-[2.5vh]" />
-						</h2>
-					</button>
-					<button
-						type="button"
-						onClick={() => handleAddField("range")}
-						className="bg-slate-100 border-slate-300 border-[1px] py-[1vh] px-[1vw] flex items-center justify-center rounded-[1.75vh] cursor-pointer"
-					>
-						<h2 className="text-[2vh] flex items-center justify-center gap-[0.75vw]">
-							Range <LuSlidersHorizontal className="text-[2.5vh]" />
-						</h2>
-					</button>
+					{[
+						{ type: "text", label: "Text", icon: <LuPenLine /> },
+						{ type: "number", label: "Number", icon: <LuBinary /> },
+						{ type: "select", label: "Select", icon: <LuSquareMousePointer /> },
+						{ type: "textarea", label: "Textarea", icon: <LuLetterText /> },
+						{ type: "checkbox", label: "Checkbox", icon: <LuSquareCheck /> },
+						{ type: "range", label: "Range", icon: <LuSlidersHorizontal /> },
+					].map((btn) => (
+						<motion.button
+							key={btn.type}
+							whileTap={{ scale: 0.95 }}
+							whileHover={{ scale: 1.0 }}
+							type="button"
+							onClick={() => handleAddField(btn.type as FieldType)}
+							className="bg-slate-100 border-slate-300 border-[1px] py-[1vh] px-[1vw] flex items-center justify-center rounded-[1.75vh] cursor-pointer"
+						>
+							<h2 className="text-[2vh] flex items-center justify-center gap-[0.75vw]">
+								{btn.label} <span className="text-[2.5vh]">{btn.icon}</span>
+							</h2>
+						</motion.button>
+					))}
 				</div>
 				<button
 					type="submit"

@@ -118,7 +118,7 @@ const Interviews = ({ interviews }: { interviews: FullInterview[] }) => {
 													<LuCircleCheck className="text-[2vh] ml-1" />
 												</span>
 											) : (
-												<span className="text-[1.75vh] flex px-[2vw] py-[0.5vh] bg-orange-300 items-center justify-center border-[1px] border-orange-400 rounded-[2vh] gap-[0.5vw]">
+												<span className="text-[1.75vh] flex px-[2.5vw] py-[0.5vh] bg-orange-300 items-center justify-center border-[1px] border-orange-400 rounded-[2vh] gap-[0.5vw]">
 													Pending <LuCircleDashed className="text-[2vh] ml-1" />
 												</span>
 											)}

@@ -159,7 +159,7 @@ const NotificationsPage = ({
 								)}
 								<button
 									onClick={() => markAsSeen(notification.id)}
-									className="p-[0.5vh] hover:bg-orange-200 rounded-full"
+									className="p-[0.5vh] hover:bg-orange-200 rounded-full transition"
 								>
 									<LuEye className="text-[2.25vh] text-orange-700" />
 								</button>
