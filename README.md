@@ -1,35 +1,49 @@
-# Auth Template
+# Citrus.ai
 
-## Usage
+# Citrus.ai
 
-Clone the project
+Citrus.ai is a SaaS platform that empowers HR teams to collect honest, private feedback through exit interviews.  
+When employees leave, HR managers can generate tailored exit interview forms, share them securely, and receive insights powered by AI.
 
-```
-git clone https://github.com/YevheniiaSimaka/Nextjs-Auth-Template
-```
+## Key Features
 
-Install dependencies
+- HR creates custom exit interview forms (questions, labels, placeholders).
+- Receiver (employee) fills out the form anonymously/privately via a unique link.
+- Responses are stored securely — only the HR creator can access them.
+- AI insights help HR identify recurring themes in feedback.
+- Notification system keeps HR updated when interviews are completed.
 
-```
-npm i
-```
+## Tech Stack
 
-Create .env
+- **Next.js 13+ App Router**
+- **Prisma ORM** with MongoDB
+- **TailwindCSS** for styling
+- **TypeScript**
+- Optional integrations: AI/NLP for insights, email delivery for sharing links.
 
-```
-DATABASE_URL=
-NEXTAUTH_SECRET=
-```
+# Citrus.ai Workflow
 
-Set up prisma
+## 1. HR User
 
-```
-npx prisma generate
-npx prisma db push
-```
+1. Logs in / creates an account.
+2. Creates an **Exit Interview**:
+   - Adds receiver name + email.
+   - Defines interview fields (label, placeholder).
+   - Gets a unique link for the interview.
+3. Shares the link with the receiver.
+4. Receives a notification once the interview is completed.
+5. Views responses and AI-generated insights.
 
-Run it
+## 2. Receiver (Employee)
 
-```
-npm run dev
-```
+1. Opens interview link (no login required).
+2. Sees form fields defined by HR.
+3. Fills out and submits their answers.
+4. Submission is stored in the database, linked to the interview.
+
+## 3. Backend System
+
+- Stores interviews, fields, and responses.
+- Generates notifications for HR.
+- Tracks interview completion status (`isCompleted`).
+- Supports AI analysis on submitted feedback.
