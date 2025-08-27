@@ -18,7 +18,6 @@ type FieldType =
 	| "select"
 	| "textarea"
 	| "checkbox"
-	| "range"
 	| "radio";
 
 interface Field {
@@ -42,7 +41,6 @@ const SendInterviewForm = () => {
 			select: "Select Field Label",
 			textarea: "Textarea Field Label",
 			checkbox: "Checkbox Field Label",
-			range: "Range Field Label",
 			radio: "Radio Field Label",
 		};
 
@@ -198,15 +196,6 @@ const SendInterviewForm = () => {
 							}
 						/>
 					)}
-					{field.type === "range" && (
-						<input
-							type="range"
-							value={field.placeholder || "0"}
-							onChange={(e) =>
-								handlePlaceholderChange(field.id, e.target.value)
-							}
-						/>
-					)}
 
 					{/* Select field */}
 					{field.type === "select" && (
@@ -344,7 +333,6 @@ const SendInterviewForm = () => {
 						{ type: "select", label: "Select", icon: <LuSquareMousePointer /> },
 						{ type: "textarea", label: "Textarea", icon: <LuLetterText /> },
 						{ type: "checkbox", label: "Checkbox", icon: <LuSquareCheck /> },
-						{ type: "range", label: "Range", icon: <LuSlidersHorizontal /> },
 						{ type: "radio", label: "Radio", icon: <LuSquareMousePointer /> },
 					].map((btn) => (
 						<motion.button
