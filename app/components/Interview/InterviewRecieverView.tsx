@@ -32,6 +32,77 @@ const InterviewRecieverView = ({ interview }: { interview: FullInterview }) => {
 		setCompleted(true);
 	};
 
+	const renderField = (field: (typeof interview.fields)[number]) => {
+		switch (field.type) {
+			case "text":
+			case "number":
+			case "range":
+				return (
+					<input
+						type={field.type}
+						value={formData[field.id]}
+						placeholder={field.placeholder}
+						onChange={(e) => handleChange(field.id, e.target.value)}
+						className="border-slate-300 border-[1px] rounded-[1.5vh] text-[2vh] px-[1vw] py-[1vh] w-full focus:outline-none"
+					/>
+				);
+
+			case "textarea":
+				return (
+					<textarea
+						value={formData[field.id]}
+						placeholder={field.placeholder}
+						onChange={(e) => handleChange(field.id, e.target.value)}
+						className="border-slate-300 border-[1px] rounded-[1.5vh] text-[2vh] px-[1vw] py-[1vh] w-full focus:outline-none"
+					/>
+				);
+
+			case "checkbox":
+				return (
+					<input
+						type="checkbox"
+						checked={formData[field.id] === "checked"}
+						onChange={(e) =>
+							handleChange(field.id, e.target.checked ? "checked" : "")
+						}
+					/>
+				);
+
+			case "select":
+				return (
+					<select
+						value={formData[field.id]}
+						onChange={(e) => handleChange(field.id, e.target.value)}
+						className="border-slate-300 border-[1px] rounded-[1.5vh] text-[2vh] px-[1vw] py-[1vh] w-full focus:outline-none"
+					>
+						{field.options?.map((opt, i) => (
+							<option key={i} value={opt}>
+								{opt}
+							</option>
+						))}
+					</select>
+				);
+
+			case "radio":
+				return (
+					<div className="flex flex-col gap-[0.5vh]">
+						{field.options?.map((opt, i) => (
+							<label key={i}>
+								<input
+									type="radio"
+									name={`radio-${field.id}`}
+									value={opt}
+									checked={formData[field.id] === opt}
+									onChange={(e) => handleChange(field.id, e.target.value)}
+								/>
+								{opt}
+							</label>
+						))}
+					</div>
+				);
+		}
+	};
+
 	return (
 		<div className="flex flex-col min-h-screen w-full bg-slate-100 py-[2vh]">
 			<div className="bg-white border-[1px] border-slate-300 rounded-[3vh] w-[96%] mx-auto px-[2vw] py-[3vh]">
@@ -94,13 +165,7 @@ const InterviewRecieverView = ({ interview }: { interview: FullInterview }) => {
 									<label className="block text-[2.5vh] font-semibold mb-[0.5vh]">
 										{field.label}
 									</label>
-									<input
-										type="text"
-										value={formData[field.id]}
-										placeholder={field.placeholder}
-										onChange={(e) => handleChange(field.id, e.target.value)}
-										className="border-slate-300 border-[1px] rounded-[1.5vh] text-[2vh] px-[1vw] py-[1vh] w-full focus:outline-none"
-									/>
+									{renderField(field)}
 								</div>
 							))}
 

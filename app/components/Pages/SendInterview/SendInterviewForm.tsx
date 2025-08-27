@@ -18,13 +18,15 @@ type FieldType =
 	| "select"
 	| "textarea"
 	| "checkbox"
-	| "range";
+	| "range"
+	| "radio";
 
 interface Field {
 	id: number;
 	type: FieldType;
 	label: string;
 	placeholder: string;
+	options?: string[];
 }
 
 const SendInterviewForm = () => {
@@ -41,12 +43,62 @@ const SendInterviewForm = () => {
 			textarea: "Textarea Field Label",
 			checkbox: "Checkbox Field Label",
 			range: "Range Field Label",
+			radio: "Radio Field Label",
 		};
 
 		setFields([
 			...fields,
-			{ id: Date.now(), type, label: defaultLabels[type], placeholder: "" },
+			{
+				id: Date.now(),
+				type,
+				label: defaultLabels[type],
+				placeholder: "",
+				options:
+					type === "select" || type === "radio" ? ["Option 1"] : undefined,
+			},
 		]);
+	};
+
+	const handleAddOption = (fieldId: number) => {
+		setFields(
+			fields.map((f) => {
+				if (f.id === fieldId) {
+					const options = f.options || [];
+					return {
+						...f,
+						options: [...options, `Option ${options.length + 1}`],
+					};
+				}
+				return f;
+			})
+		);
+	};
+
+	const handleOptionChange = (fieldId: number, idx: number, value: string) => {
+		setFields(
+			fields.map((f) => {
+				if (f.id === fieldId && f.options) {
+					const newOptions = [...f.options];
+					newOptions[idx] = value;
+					return { ...f, options: newOptions };
+				}
+				return f;
+			})
+		);
+	};
+
+	const handleDeleteField = (id: number) => {
+		setFields(fields.filter((field) => field.id !== id));
+	};
+
+	const handleLabelChange = (id: number, newLabel: string) => {
+		setFields(fields.map((f) => (f.id === id ? { ...f, label: newLabel } : f)));
+	};
+
+	const handlePlaceholderChange = (id: number, newValue: string) => {
+		setFields(
+			fields.map((f) => (f.id === id ? { ...f, placeholder: newValue } : f))
+		);
 	};
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -66,9 +118,7 @@ const SendInterviewForm = () => {
 				body: JSON.stringify(payload),
 			});
 
-			if (!res.ok) {
-				throw new Error("Failed to create interview");
-			}
+			if (!res.ok) throw new Error("Failed to create interview");
 
 			const data = await res.json();
 			console.log("Interview created", data);
@@ -80,20 +130,6 @@ const SendInterviewForm = () => {
 		} catch (error) {
 			console.error(error);
 		}
-	};
-
-	const handleDeleteField = (id: number) => {
-		setFields(fields.filter((field) => field.id !== id));
-	};
-
-	const handleLabelChange = (id: number, newLabel: string) => {
-		setFields(fields.map((f) => (f.id === id ? { ...f, label: newLabel } : f)));
-	};
-
-	const handlePlaceholderChange = (id: number, newValue: string) => {
-		setFields(
-			fields.map((f) => (f.id === id ? { ...f, placeholder: newValue } : f))
-		);
 	};
 
 	const renderField = (field: Field) => {
@@ -140,18 +176,6 @@ const SendInterviewForm = () => {
 							className="border-slate-300 border-[1px] rounded-[1.5vh] text-[2vh] px-[1vw] py-[1vh] w-full focus:outline-none"
 						/>
 					)}
-					{field.type === "select" && (
-						<select
-							value={field.placeholder}
-							onChange={(e) =>
-								handlePlaceholderChange(field.id, e.target.value)
-							}
-							className="border-slate-300 border-[1px] rounded-[1.5vh] text-[2vh] px-[1vw] py-[1vh] w-full focus:outline-none"
-						>
-							<option value="">Option 1</option>
-							<option value="Option 2">Option 2</option>
-						</select>
-					)}
 					{field.type === "textarea" && (
 						<textarea
 							value={field.placeholder}
@@ -183,6 +207,71 @@ const SendInterviewForm = () => {
 							}
 						/>
 					)}
+
+					{/* Select field */}
+					{field.type === "select" && (
+						<div className="flex flex-col gap-[0.5vh]">
+							<select
+								value={field.placeholder}
+								onChange={(e) =>
+									handlePlaceholderChange(field.id, e.target.value)
+								}
+								className="border-slate-300 border-[1px] rounded-[1.5vh] text-[2vh] px-[1vw] py-[1vh] w-full focus:outline-none"
+							>
+								{field.options?.map((opt, i) => (
+									<option key={i} value={opt}>
+										{opt}
+									</option>
+								))}
+							</select>
+							{field.options?.map((opt, i) => (
+								<input
+									key={i}
+									value={opt}
+									onChange={(e) =>
+										handleOptionChange(field.id, i, e.target.value)
+									}
+									className="border-slate-300 border-[1px] rounded-[1.5vh] text-[2vh] px-[1vw] py-[1vh] w-full focus:outline-none"
+								/>
+							))}
+							<button
+								type="button"
+								onClick={() => handleAddOption(field.id)}
+								className="text-orange-600 steiner font-extrabold tracking-[1px] mt-[0.5vh]"
+							>
+								+ Add Option
+							</button>
+						</div>
+					)}
+
+					{/* Radio field */}
+					{field.type === "radio" && (
+						<div className="flex flex-col gap-[0.5vh]">
+							{field.options?.map((opt, i) => (
+								<label key={i}>
+									<input type="radio" name={`radio-${field.id}`} value={opt} />{" "}
+									{opt}
+								</label>
+							))}
+							{field.options?.map((opt, i) => (
+								<input
+									key={i + 1000}
+									value={opt}
+									onChange={(e) =>
+										handleOptionChange(field.id, i, e.target.value)
+									}
+									className="border-slate-300 border-[1px] rounded-[1.5vh] text-[2vh] px-[1vw] py-[1vh] w-full focus:outline-none"
+								/>
+							))}
+							<button
+								type="button"
+								onClick={() => handleAddOption(field.id)}
+								className="text-orange-600 steiner font-extrabold tracking-[1px] mt-[0.5vh]"
+							>
+								+ Add Option
+							</button>
+						</div>
+					)}
 				</div>
 
 				<motion.button
@@ -207,6 +296,7 @@ const SendInterviewForm = () => {
 				<h2 className="text-[3vh] font-light mb-[2vh] pt-[2vh] text-start">
 					Interview Form
 				</h2>
+				{/* Receiver info and comments */}
 				<div className="mb-[2vh]">
 					<label className="block text-[2vh] mb-[0.5vh]">Receiver Name</label>
 					<input
@@ -255,6 +345,7 @@ const SendInterviewForm = () => {
 						{ type: "textarea", label: "Textarea", icon: <LuLetterText /> },
 						{ type: "checkbox", label: "Checkbox", icon: <LuSquareCheck /> },
 						{ type: "range", label: "Range", icon: <LuSlidersHorizontal /> },
+						{ type: "radio", label: "Radio", icon: <LuSquareMousePointer /> },
 					].map((btn) => (
 						<motion.button
 							key={btn.type}
@@ -270,6 +361,7 @@ const SendInterviewForm = () => {
 						</motion.button>
 					))}
 				</div>
+
 				<button
 					type="submit"
 					className="bg-orange-100 text-orange-600 border-[1px] border-orange-500 w-full cursor-pointer mt-[3vh] text-[2vh] font-semibold rounded-[2vh] py-[1.25vh]"

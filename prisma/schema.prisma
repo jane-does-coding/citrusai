@@ -43,6 +43,8 @@ model Field {
   label         String
   placeholder   String
   receiverInput String? 
+  options       String[]
+
 }
 
 model Notification {

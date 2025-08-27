@@ -22,7 +22,8 @@ export async function POST(req: Request) {
 					create: fields.map((f: any) => ({
 						type: f.type,
 						label: f.label,
-						placeholder: f.placeholder,
+						placeholder: f.placeholder || "",
+						options: f.options ? { set: f.options } : undefined,
 					})),
 				},
 			},
