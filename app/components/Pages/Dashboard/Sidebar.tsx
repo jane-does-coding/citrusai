@@ -1,4 +1,5 @@
 "use client";
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -155,8 +156,8 @@ const Sidebar = () => {
 				</Link>
 			</div>
 
-			<Link
-				href={"/logout"}
+			<button
+				onClick={() => signOut()}
 				className={`w-[4vw] flex items-center justify-center relative aspect-[1] rounded-[2vh] ${
 					isActive("/logout") ? activeIconClasses : inactiveIconClasses
 				}`}
@@ -169,7 +170,7 @@ const Sidebar = () => {
 				<div className="absolute w-[15vw] text-[2.25vh] right-[-16.5vw] flex items-center justify-start top-[50%] font-medium hover:pl-[0.25vw] py-[1vh] transition-all translate-y-[-50%]">
 					Logout
 				</div>
-			</Link>
+			</button>
 		</div>
 	);
 };
