@@ -1,9 +1,9 @@
 # Citrus.ai
 
-# Citrus.ai
-
 Citrus.ai is a SaaS platform that empowers HR teams to collect honest, private feedback through exit interviews.  
 When employees leave, HR managers can generate tailored exit interview forms, share them securely, and receive insights powered by AI.
+
+Something i struggled with while creating that project, is the form creation logic, specifically for select and radio inputs. Those inputs require to be able to add multiple options to what to select, while regular text inputs don't need that, and I didn't want to create seperate schema and api for it, so I was struggling creating that logic, and I chose to add another fiels called options field, which can be empty in case the input is text or number.
 
 ## Key Features
 
@@ -47,3 +47,39 @@ When employees leave, HR managers can generate tailored exit interview forms, sh
 - Generates notifications for HR.
 - Tracks interview completion status (`isCompleted`).
 - Supports AI analysis on submitted feedback.
+
+## Setup
+
+### 1. Clone the repo
+
+```bash
+git clone https://github.com/jane-does-coding/citrusai
+cd citrusai
+```
+
+### 2. Install the dependencies
+
+```bash
+npm i
+```
+
+### 3. Configure .env
+
+```bash
+DATABASE_URL="your mongodb"
+NEXTAUTH_SECRET="random-secret"
+```
+
+### 4. Setup Prisma
+
+```bash
+npx prisma generate
+```
+
+### 4. Run the project
+
+```bash
+npm run dev
+```
+
+[![Athena Award Badge](https://img.shields.io/endpoint?url=https%3A%2F%2Faward.athena.hackclub.com%2Fapi%2Fbadge)](https://award.athena.hackclub.com?utm_source=readme)

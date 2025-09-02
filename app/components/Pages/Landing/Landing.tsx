@@ -42,7 +42,7 @@ const Landing = () => {
 			</div>
 			<button
 				onClick={() => registerModal.onOpen()}
-				className="text-[2vh] px-[2vw] py-[1.25vh] bg-orange-600 text-white mx-auto relative rounded-[2vh] mt-[3vh]"
+				className="text-[2vh] px-[2vw] py-[1.25vh] bg-orange-600 text-white mx-auto relative rounded-[2vh] mt-[2vh]"
 			>
 				Get Started
 			</button>
